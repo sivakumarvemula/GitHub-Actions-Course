@@ -352,13 +352,7 @@
           <a href="#resources" class="nav-link" data-section="resources">Additional Resources</a>
         </nav>
 
-        <div class="mt-8">
-          <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Course Progress</div>
-          <div class="progress-container">
-            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
-          </div>
-          <div id="progress-text" class="text-sm text-gray-600 dark:text-gray-400 text-right">0%</div>
-        </div>
+        
       </div>
 
       <!-- Main Content -->
@@ -3861,291 +3855,222 @@ jobs:
 
         </section>
          <section id="resources"  class="mb-12">
-        <div className="space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl flex items-center">
-                <BookOpen className="mr-2 h-6 w-6 text-blue-600" />
-                Additional Resources
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-6">
-                To continue your GitHub Actions learning journey, here are some valuable resources:
-              </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Official Documentation -->
+    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+      <h3 class="text-xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-file-text mr-2 text-blue-600"></i>
+        Official Documentation
+      </h3>
+      <ul class="space-y-3">
+        <li><a href="https://docs.github.com/en/actions" class="text-blue-600 hover:underline">GitHub Actions Documentation</a></li>
+        <li><a href="https://docs.github.com/en/actions/learn-github-actions" class="text-blue-600 hover:underline">Learn GitHub Actions</a></li>
+        <li><a href="https://docs.github.com/en/actions/examples" class="text-blue-600 hover:underline">GitHub Actions Examples</a></li>
+        <li><a href="https://docs.github.com/en/actions/reference" class="text-blue-600 hover:underline">GitHub Actions Reference</a></li>
+      </ul>
+    </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center">
-                    <FileText className="mr-2 h-5 w-5 text-blue-600" />
-                    Official Documentation
-                  </h3>
-                  <ul className="space-y-3">
-                    <li>
-                      <a href="https://docs.github.com/en/actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        GitHub Actions Documentation
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://docs.github.com/en/actions/learn-github-actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        Learn GitHub Actions
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://docs.github.com/en/actions/examples" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        GitHub Actions Examples
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://docs.github.com/en/actions/reference" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        GitHub Actions Reference
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+    <!-- Marketplace & Actions -->
+    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+      <h3 class="text-xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-box mr-2 text-green-600"></i>
+        Marketplace & Actions
+      </h3>
+      <ul class="space-y-3">
+        <li><a href="https://github.com/marketplace?type=actions" class="text-blue-600 hover:underline">GitHub Actions Marketplace</a></li>
+        <li><a href="https://github.com/actions" class="text-blue-600 hover:underline">Official GitHub Actions</a></li>
+        <li><a href="https://github.com/sdras/awesome-actions" class="text-blue-600 hover:underline">Awesome Actions (Community List)</a></li>
+      </ul>
+    </div>
 
-                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center">
-                    <Package className="mr-2 h-5 w-5 text-green-600" />
-                    Marketplace & Actions
-                  </h3>
-                  <ul className="space-y-3">
-                    <li>
-                      <a href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        GitHub Actions Marketplace
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        Official GitHub Actions
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/sdras/awesome-actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        Awesome Actions (Community List)
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+    <!-- Tutorials & Guides -->
+    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+      <h3 class="text-xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-graduation-cap mr-2 text-purple-600"></i>
+        Tutorials & Guides
+      </h3>
+      <ul class="space-y-3">
+        <li><a href="https://lab.github.com/githubtraining/github-actions:-hello-world" class="text-blue-600 hover:underline">GitHub Learning Lab: GitHub Actions</a></li>
+        <li><a href="https://docs.github.com/en/actions/guides" class="text-blue-600 hover:underline">GitHub Actions Guides</a></li>
+        <li><a href="https://docs.github.com/en/actions/deployment" class="text-blue-600 hover:underline">Deployment Guides</a></li>
+      </ul>
+    </div>
 
-                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center">
-                    <BookOpen className="mr-2 h-5 w-5 text-purple-600" />
-                    Tutorials & Guides
-                  </h3>
-                  <ul className="space-y-3">
-                    <li>
-                      <a href="https://lab.github.com/githubtraining/github-actions:-hello-world" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        GitHub Learning Lab: GitHub Actions
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://docs.github.com/en/actions/guides" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        GitHub Actions Guides
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://docs.github.com/en/actions/deployment" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        Deployment Guides
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+    <!-- Community & Support -->
+    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+      <h3 class="text-xl font-semibold mb-4 flex items-center">
+        <i class="fas fa-users mr-2 text-orange-600"></i>
+        Community & Support
+      </h3>
+      <ul class="space-y-3">
+        <li><a href="https://github.community/c/code-to-cloud/github-actions/41" class="text-blue-600 hover:underline">GitHub Community Forum</a></li>
+        <li><a href="https://stackoverflow.com/questions/tagged/github-actions" class="text-blue-600 hover:underline">Stack Overflow: GitHub Actions</a></li>
+        <li><a href="https://github.com/orgs/community/discussions/categories/actions" class="text-blue-600 hover:underline">GitHub Discussions: Actions</a></li>
+      </ul>
+    </div>
+  </div>
 
-                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center">
-                    <Users className="mr-2 h-5 w-5 text-orange-600" />
-                    Community & Support
-                  </h3>
-                  <ul className="space-y-3">
-                    <li>
-                      <a href="https://github.community/c/code-to-cloud/github-actions/41" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        GitHub Community Forum
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://stackoverflow.com/questions/tagged/github-actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        Stack Overflow: GitHub Actions
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/orgs/community/discussions/categories/actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
-                        <span className="mr-2">•</span>
-                        GitHub Discussions: Actions
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+  <!-- Recommended Books -->
+  <div class="mt-8">
+    <h3 class="text-xl font-semibold mb-4">Recommended Books</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+        <h4 class="font-semibold">GitHub Actions in Action</h4>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+          A comprehensive guide to automating your workflow with GitHub Actions, covering everything from basic concepts to advanced techniques.
+        </p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+        <h4 class="font-semibold">Continuous Delivery with GitHub Actions</h4>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+          Learn how to implement continuous delivery pipelines using GitHub Actions, with practical examples for various project types.
+        </p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+        <h4 class="font-semibold">Building Custom GitHub Actions</h4>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+          A deep dive into creating custom actions for GitHub Actions, including JavaScript actions, Docker container actions, and composite actions.
+        </p>
+      </div>
+    </div>
+  </div>
 
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-4">Recommended Books</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                    <h4 className="font-semibold">GitHub Actions in Action</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                      A comprehensive guide to automating your workflow with GitHub Actions, covering everything from basic concepts to advanced techniques.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                    <h4 className="font-semibold">Continuous Delivery with GitHub Actions</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                      Learn how to implement continuous delivery pipelines using GitHub Actions, with practical examples for various project types.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                    <h4 className="font-semibold">Building Custom GitHub Actions</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                      A deep dive into creating custom actions for GitHub Actions, including JavaScript actions, Docker container actions, and composite actions.
-                    </p>
-                  </div>
-                </div>
-              </div>
+  <!-- Video Tutorials -->
+  <div class="mt-8">
+    <h3 class="text-xl font-semibold mb-4">Video Tutorials</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+        <h4 class="font-semibold">GitHub Actions Crash Course</h4>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+          A beginner-friendly introduction to GitHub Actions, covering the basics of workflow creation and automation.
+        </p>
+        <p class="text-sm text-gray-500 mt-1">Duration: 1 hour</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+        <h4 class="font-semibold">Advanced GitHub Actions Techniques</h4>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+          Learn advanced techniques for optimizing your GitHub Actions workflows, including caching, matrix builds, and reusable workflows.
+        </p>
+        <p class="text-sm text-gray-500 mt-1">Duration: 1.5 hours</p>
+      </div>
+    </div>
+  </div>
 
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-4">Video Tutorials</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                    <h4 className="font-semibold">GitHub Actions Crash Course</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                      A beginner-friendly introduction to GitHub Actions, covering the basics of workflow creation and automation.
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">Duration: 1 hour</p>
-                  </div>
-                  
-                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
-                    <h4 className="font-semibold">Advanced GitHub Actions Techniques</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                      Learn advanced techniques for optimizing your GitHub Actions workflows, including caching, matrix builds, and reusable workflows.
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">Duration: 1.5 hours</p>
-                  </div>
-                </div>
-              </div>
+  <!-- Practice Makes Perfect Alert -->
+  <div class="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border-l-4 border-green-500 p-4 rounded mt-8">
+    <h4 class="font-semibold text-green-800 dark:text-green-300">Practice Makes Perfect</h4>
+    <p class="text-green-700 dark:text-green-200">
+      The best way to learn GitHub Actions is by doing. Start with simple workflows and gradually add more complexity as you become more comfortable. Don't be afraid to experiment and learn from your mistakes.
+    </p>
+  </div>
 
-              <Alert className="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border-green-200 dark:border-green-800 mt-8">
-                <AlertTitle className="text-green-800 dark:text-green-300">Practice Makes Perfect</AlertTitle>
-                <AlertDescription>
-                  The best way to learn GitHub Actions is by doing. Start with simple workflows and gradually add more complexity as you become more comfortable. Don't be afraid to experiment and learn from your mistakes.
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
+  <!-- Glossary -->
+  <div class="mt-8">
+    <h3 class="text-xl font-semibold mb-4">Glossary of Terms</h3>
+    <div class="card w-full max-w-none">
+  <div class="p-6">
+    <h2 class="text-2xl font-bold mb-4 flex items-center">
+      <i class="fas fa-book mr-2 text-blue-600"></i>
+      Glossary of Terms
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Workflow</h3>
+        <p class="text-sm">An automated procedure that you add to your repository, defined in a YAML file in the .github/workflows directory.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Event</h3>
+        <p class="text-sm">A specific activity that triggers a workflow run, such as a push, pull request, or scheduled time.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Job</h3>
+        <p class="text-sm">A set of steps that execute on the same runner. Jobs can run in parallel or sequentially depending on configuration.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Step</h3>
+        <p class="text-sm">An individual task within a job that can run commands, setup tasks, or run an action.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Action</h3>
+        <p class="text-sm">A reusable unit of code that can perform a specific task, such as checking out code or setting up a runtime environment.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Runner</h3>
+        <p class="text-sm">A server that runs your workflows when they're triggered. GitHub provides Linux, Windows, and macOS runners, or you can host your own.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Artifact</h3>
+        <p class="text-sm">Files produced during a workflow run that can be saved and shared between jobs or downloaded after the workflow completes.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Secret</h3>
+        <p class="text-sm">Encrypted environment variables that you create in a repository or organization for use in GitHub Actions workflows.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Environment</h3>
+        <p class="text-sm">A named deployment target with protection rules and secrets that can be referenced in workflow jobs.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Matrix</h3>
+        <p class="text-sm">A set of different configurations for a job, allowing you to test across multiple operating systems, versions, or other variables.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Context</h3>
+        <p class="text-sm">A way to access information about workflow runs, runner environments, jobs, and steps. Each context is an object that contains properties.</p>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg w-full">
+        <h3 class="font-semibold">Expression</h3>
+        <p class="text-sm">A syntax used in workflows to evaluate variables, contexts, and functions. Expressions are denoted with ${{ expression }}.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">Glossary of Terms</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Workflow</h3>
-                  <p className="text-sm">An automated procedure that you add to your repository, defined in a YAML file in the .github/workflows directory.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Event</h3>
-                  <p className="text-sm">A specific activity that triggers a workflow run, such as a push, pull request, or scheduled time.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Job</h3>
-                  <p className="text-sm">A set of steps that execute on the same runner. Jobs can run in parallel or sequentially depending on configuration.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Step</h3>
-                  <p className="text-sm">An individual task within a job that can run commands, setup tasks, or run an action.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Action</h3>
-                  <p className="text-sm">A reusable unit of code that can perform a specific task, such as checking out code or setting up a runtime environment.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Runner</h3>
-                  <p className="text-sm">A server that runs your workflows when they're triggered. GitHub provides Linux, Windows, and macOS runners, or you can host your own.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Artifact</h3>
-                  <p className="text-sm">Files produced during a workflow run that can be saved and shared between jobs or downloaded after the workflow completes.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Secret</h3>
-                  <p className="text-sm">Encrypted environment variables that you create in a repository or organization for use in GitHub Actions workflows.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Environment</h3>
-                  <p className="text-sm">A named deployment target with protection rules and secrets that can be referenced in workflow jobs.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Matrix</h3>
-                  <p className="text-sm">A set of different configurations for a job, allowing you to test across multiple operating systems, versions, or other variables.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Context</h3>
-                  <p className="text-sm">A way to access information about workflow runs, runner environments, jobs, and steps. Each context is an object that contains properties.</p>
-                </div>
-                
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                  <h3 className="font-semibold">Expression</h3>
-                  <p className="text-sm">A syntax used in workflows to evaluate variables, contexts, and functions. Expressions are denoted with ${{ expression }}.</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+  </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">Course Completion</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center p-6 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 rounded-lg">
-                <h3 className="text-2xl font-bold mb-4">Congratulations!</h3>
-                <p className="mb-4">
-                  You've completed the GitHub Actions Learning Guide. You now have the knowledge and skills to implement efficient CI/CD workflows using GitHub Actions.
-                </p>
-                <p>
-                  Remember to keep practicing and exploring new features as GitHub Actions continues to evolve.
-                </p>
-                <div className="mt-6">
-                  <Award className="h-16 w-16 text-blue-600 mx-auto" />
-                </div>
-              </div>
-              
-              <div className="mt-6">
-                <h3 className="font-semibold mb-2">Next Steps:</h3>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Implement GitHub Actions in your own projects</li>
-                  <li>Create custom actions for your specific needs</li>
-                  <li>Contribute to open-source actions in the GitHub Marketplace</li>
-                  <li>Join the GitHub Actions community to share your knowledge and learn from others</li>
-                  <li>Stay updated with new GitHub Actions features and best practices</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+  <!-- Course Completion -->
+  <div class="mt-8">
+    <h3 class="text-xl font-semibold mb-4">Course Completion</h3>
+    <div class="text-center p-6 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 rounded-lg">
+      <h4 class="text-2xl font-bold mb-4">Congratulations!</h4>
+      <p class="mb-4">
+        You've completed the GitHub Actions Learning Guide. You now have the knowledge and skills to implement efficient CI/CD workflows using GitHub Actions.
+      </p>
+      <p>
+        Remember to keep practicing and exploring new features as GitHub Actions continues to evolve.
+      </p>
+      <div class="mt-6">
+        <i class="fas fa-award text-blue-600 text-4xl"></i>
+      </div>
+    </div>
+    
+    <div class="mt-6">
+      <h4 class="font-semibold mb-2">Next Steps:</h4>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>Implement GitHub Actions in your own projects</li>
+        <li>Create custom actions for your specific needs</li>
+        <li>Contribute to open-source actions in the GitHub Marketplace</li>
+        <li>Join the GitHub Actions community to share your knowledge and learn from others</li>
+        <li>Stay updated with new GitHub Actions features and best practices</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
       </section>
         </main>
       </div>
