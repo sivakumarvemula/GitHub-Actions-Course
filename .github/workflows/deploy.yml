@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy report.html to GitHub Pages
 
 on:
   push:
@@ -12,13 +12,9 @@ jobs:
     permissions:
       pages: write
       id-token: write
-      contents: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: "pages"
-      cancel-in-progress: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,11 +22,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Create Pages artifact
+      - name: Copy report.html to index.html
         run: |
           mkdir -p _site
           cp report.html _site/index.html
-          
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
