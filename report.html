@@ -1,0 +1,4179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Actions Learning Guide: From Beginner to Intermediate</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9fafb;
+    }
+    
+    .dark-mode {
+      color: #e5e7eb;
+      background-color: #111827;
+    }
+    
+    .dark-mode .bg-white {
+      background-color: #1f2937;
+    }
+    
+    .dark-mode .text-gray-700 {
+      color: #d1d5db;
+    }
+    
+    .dark-mode .text-gray-600 {
+      color: #9ca3af;
+    }
+    
+    .dark-mode .border-gray-200 {
+      border-color: #374151;
+    }
+    
+    .dark-mode .bg-gray-50 {
+      background-color: #374151;
+    }
+    
+    .dark-mode .bg-blue-50 {
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+    
+    .dark-mode .bg-yellow-50 {
+      background-color: rgba(245, 158, 11, 0.2);
+    }
+    
+    .dark-mode .bg-green-50 {
+      background-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .dark-mode .bg-red-50 {
+      background-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .dark-mode .bg-gray-100 {
+      background-color: #1f2937;
+    }
+
+    .dark-mode .shadow {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    pre {
+      overflow-x: auto;
+      padding: 1rem;
+      background-color: #f3f4f6;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .dark-mode pre {
+      background-color: #111827;
+    }
+
+    .code-block {
+      position: relative;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      background-color: #e5e7eb;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .dark-mode .copy-button {
+      background-color: #374151;
+    }
+
+    .copy-button:hover {
+      background-color: #d1d5db;
+    }
+
+    .dark-mode .copy-button:hover {
+      background-color: #4b5563;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 1rem;
+      height: calc(100vh - 2rem);
+      overflow-y: auto;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      margin-bottom: 0.25rem;
+      transition: background-color 0.2s;
+    }
+
+    .nav-link:hover {
+      background-color: #e5e7eb;
+    }
+
+    .dark-mode .nav-link:hover {
+      background-color: #374151;
+    }
+
+    .nav-link.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .dark-mode .nav-link.active {
+      background-color: #2563eb;
+    }
+
+    .chart-container {
+      height: 300px;
+      margin: 1.5rem 0;
+    }
+
+    .timeline {
+      position: relative;
+      margin: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 1.5rem;
+      height: 100%;
+      width: 2px;
+      background-color: #e5e7eb;
+    }
+
+    .dark-mode .timeline::before {
+      background-color: #374151;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 3.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-icon {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background-color: #3b82f6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timeline-content {
+      padding: 1rem;
+      background-color: white;
+      border-radius: 0.375rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .dark-mode .timeline-content {
+      background-color: #1f2937;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        z-index: 50;
+        background-color: #f9fafb;
+        transition: left 0.3s;
+      }
+
+      .dark-mode .sidebar {
+        background-color: #111827;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .mobile-menu-button {
+        display: block;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-menu-button {
+        display: none;
+      }
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background-color: #e5e7eb;
+      border-radius: 4px;
+      margin: 1rem 0;
+    }
+
+    .dark-mode .progress-container {
+      background-color: #374151;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #3b82f6;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-mode .card {
+      background-color: #1f2937;
+    }
+
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .dark-mode .glassmorphism {
+      background: rgba(31, 41, 55, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .neon-border {
+      border: 2px solid #3b82f6;
+      box-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6;
+    }
+
+    .dark-mode .neon-border {
+      border: 2px solid #60a5fa;
+      box-shadow: 0 0 5px #60a5fa, 0 0 10px #60a5fa;
+    }
+
+    .tech-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .dark-mode .tech-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  <button id="theme-toggle" class="fixed top-4 right-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-full">
+    <i class="fas fa-moon dark:hidden"></i>
+    <i class="fas fa-sun hidden dark:block"></i>
+  </button>
+
+  <button id="mobile-menu-button"
+    class="fixed top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-full mobile-menu-button">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row gap-8">
+      <!-- Sidebar Navigation -->
+      <div id="sidebar" class="sidebar w-full md:w-64 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <div class="flex justify-between items-center md:block mb-6">
+          <h2 class="text-xl font-bold">Course Navigation</h2>
+          <button id="close-sidebar" class="md:hidden p-2">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <nav>
+          <a href="#overview" class="nav-link" data-section="overview">Course Overview</a>
+          <a href="#chapter1" class="nav-link" data-section="chapter1">1. GitHub Actions Fundamentals</a>
+          <a href="#chapter2" class="nav-link" data-section="chapter2">2. Creating Your First Workflow</a>
+          <a href="#chapter3" class="nav-link" data-section="chapter3">3. Events, Jobs, and Runners</a>
+          <a href="#chapter4" class="nav-link" data-section="chapter4">4. Working with Actions</a>
+          <a href="#chapter5" class="nav-link" data-section="chapter5">5. CI/CD Implementation</a>
+          <a href="#chapter6" class="nav-link" data-section="chapter6">6. Advanced Features</a>
+          <a href="#chapter7" class="nav-link" data-section="chapter7">7. Best Practices</a>
+          <a href="#examples" class="nav-link" data-section="examples">Real-World Examples</a>
+          <a href="#exercises" class="nav-link" data-section="exercises">Practical Exercises</a>
+          <a href="#resources" class="nav-link" data-section="resources">Additional Resources</a>
+        </nav>
+
+        <div class="mt-8">
+          <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Course Progress</div>
+          <div class="progress-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+          </div>
+          <div id="progress-text" class="text-sm text-gray-600 dark:text-gray-400 text-right">0%</div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1">
+        <!-- Header -->
+        <header class="mb-8 p-6 rounded-lg tech-pattern glassmorphism neon-border">
+          <div class="flex flex-col md:flex-row items-center justify-between">
+            <div class="mb-4 md:mb-0">
+              <h1 class="text-3xl md:text-4xl font-bold mb-2">GitHub Actions Learning Guide</h1>
+              <p class="text-lg opacity-90">Master workflow automation with GitHub's integrated CI/CD solution</p>
+            </div>
+            <div
+              class="flex items-center space-x-2 bg-white bg-opacity-20 dark:bg-black dark:bg-opacity-20 p-3 rounded-lg">
+              <i class="fas fa-clock"></i>
+              <span>Last Updated: May 2025</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Course Overview Section -->
+        <section id="overview" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-book-open mr-2 text-blue-600"></i>
+              Course Overview
+            </h2>
+            <p class="mb-4">
+              Welcome to the comprehensive GitHub Actions learning guide! This course is designed to take you from a
+              beginner to an intermediate level user, providing you with both theoretical knowledge and practical skills
+              to implement efficient CI/CD workflows using GitHub Actions.
+            </p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">What You'll Learn</h3>
+              <ul class="list-disc pl-6 space-y-2">
+                <li>Fundamentals of GitHub Actions and its core components</li>
+                <li>Creating and configuring workflows for different scenarios</li>
+                <li>Working with events, jobs, and runners</li>
+                <li>Using and creating custom actions</li>
+                <li>Implementing CI/CD pipelines for various project types</li>
+                <li>Advanced features like matrix builds, caching, and secrets management</li>
+                <li>Best practices and optimization techniques</li>
+              </ul>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Who This Course Is For</h3>
+              <ul class="list-disc pl-6 space-y-2">
+                <li>Developers looking to automate their software workflows</li>
+                <li>DevOps engineers implementing CI/CD pipelines</li>
+                <li>Team leads wanting to improve development processes</li>
+                <li>Anyone with basic Git knowledge wanting to learn workflow automation</li>
+              </ul>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Prerequisites</h3>
+              <ul class="list-disc pl-6 space-y-2">
+                <li>Basic understanding of Git and GitHub</li>
+                <li>Familiarity with command-line interfaces</li>
+                <li>Basic knowledge of YAML syntax</li>
+                <li>Understanding of software development concepts</li>
+              </ul>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border-l-4 border-blue-500 p-4 rounded">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-300">Why GitHub Actions?</h4>
+              <p class="text-blue-700 dark:text-blue-200">
+                GitHub Actions provides seamless integration with your GitHub repositories, allowing you to automate
+                your software development workflows directly from your GitHub project. With its extensive marketplace of
+                pre-built actions and the ability to create custom ones, it offers flexibility and power for teams of
+                all sizes.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div class="card">
+              <h3 class="text-xl font-semibold mb-4">GitHub Actions Adoption</h3>
+              <div class="chart-container">
+                <canvas id="adoptionChart"></canvas>
+              </div>
+              <p class="text-sm text-gray-600 dark:text-gray-400 text-center mt-2">
+                GitHub Actions usage has grown significantly since its launch in 2019
+              </p>
+            </div>
+
+            <div class="card">
+              <h3 class="text-xl font-semibold mb-4">CI/CD Market Share (2025)</h3>
+              <div class="chart-container">
+                <canvas id="marketShareChart"></canvas>
+              </div>
+              <p class="text-sm text-gray-600 dark:text-gray-400 text-center mt-2">
+                GitHub Actions has become a leading CI/CD solution
+              </p>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-2xl font-semibold mb-4">Course Structure</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <i class="fas fa-book"></i>
+                </div>
+                <div class="timeline-content">
+                  <h4 class="text-xl font-semibold">Chapter 1: GitHub Actions Fundamentals</h4>
+                  <p class="text-gray-600 dark:text-gray-300">Introduction to GitHub Actions, core concepts, components,
+                    and basic terminology.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <i class="fas fa-file-code"></i>
+                </div>
+                <div class="timeline-content">
+                  <h4 class="text-xl font-semibold">Chapter 2: Creating Your First Workflow</h4>
+                  <p class="text-gray-600 dark:text-gray-300">Step-by-step guide to creating and configuring workflows,
+                    understanding YAML syntax, and workflow structure.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <i class="fas fa-code-branch"></i>
+                </div>
+                <div class="timeline-content">
+                  <h4 class="text-xl font-semibold">Chapter 3: Events, Jobs, and Runners</h4>
+                  <p class="text-gray-600 dark:text-gray-300">Deep dive into workflow triggers, job configuration, and
+                    runner environments.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <i class="fas fa-box"></i>
+                </div>
+                <div class="timeline-content">
+                  <h4 class="text-xl font-semibold">Chapter 4: Working with Actions</h4>
+                  <p class="text-gray-600 dark:text-gray-300">Using pre-built actions from the marketplace, creating
+                    custom actions, and action types.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <i class="fas fa-bolt"></i>
+                </div>
+                <div class="timeline-content">
+                  <h4 class="text-xl font-semibold">Chapter 5: CI/CD Implementation</h4>
+                  <p class="text-gray-600 dark:text-gray-300">Building complete CI/CD pipelines for different project
+                    types and deployment scenarios.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <i class="fas fa-cogs"></i>
+                </div>
+                <div class="timeline-content">
+                  <h4 class="text-xl font-semibold">Chapter 6: Advanced Features</h4>
+                  <p class="text-gray-600 dark:text-gray-300">Matrix builds, caching, artifacts, secrets management, and
+                    other advanced capabilities.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <i class="fas fa-award"></i>
+                </div>
+                <div class="timeline-content">
+                  <h4 class="text-xl font-semibold">Chapter 7: Best Practices and Optimization</h4>
+                  <p class="text-gray-600 dark:text-gray-300">Workflow optimization, security best practices, and
+                    real-world implementation strategies.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chapter 1: GitHub Actions Fundamentals -->
+        <section id="chapter1" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-book mr-2 text-blue-600"></i>
+              Chapter 1: GitHub Actions Fundamentals
+            </h2>
+            <p class="mb-4">
+              GitHub Actions is a powerful automation platform integrated directly into GitHub repositories. It allows
+              you to automate your software development workflows, from simple tasks like running tests to complex CI/CD
+              pipelines.
+            </p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">What is GitHub Actions?</h3>
+              <p class="mb-2">
+                GitHub Actions is GitHub's built-in continuous integration and continuous delivery (CI/CD) solution that
+                allows you to automate your build, test, and deployment pipeline directly from your GitHub repository.
+              </p>
+              <p>
+                Unlike external CI/CD tools, GitHub Actions is fully integrated with GitHub, making it seamless to
+                automate workflows based on GitHub events like pushes, pull requests, releases, and more.
+              </p>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Core Components</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold flex items-center text-blue-600">
+                    <i class="fas fa-sitemap mr-2"></i>
+                    Workflows
+                  </h4>
+                  <p class="text-sm">Automated procedures that you add to your repository, defined in YAML files in the
+                    .github/workflows directory.</p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold flex items-center text-green-600">
+                    <i class="fas fa-code-pull-request mr-2"></i>
+                    Events
+                  </h4>
+                  <p class="text-sm">Specific activities that trigger a workflow run, such as a push, pull request, or
+                    scheduled time.</p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold flex items-center text-purple-600">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Jobs
+                  </h4>
+                  <p class="text-sm">A set of steps that execute on the same runner. Jobs can run in parallel or
+                    sequentially depending on configuration.</p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold flex items-center text-orange-600">
+                    <i class="fas fa-play mr-2"></i>
+                    Steps
+                  </h4>
+                  <p class="text-sm">Individual tasks within a job that can run commands, setup tasks, or run an action.
+                  </p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold flex items-center text-red-600">
+                    <i class="fas fa-box mr-2"></i>
+                    Actions
+                  </h4>
+                  <p class="text-sm">Reusable units of code that can be used in workflows. They can be created by you or
+                    sourced from the GitHub Marketplace.</p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold flex items-center text-yellow-600">
+                    <i class="fas fa-server mr-2"></i>
+                    Runners
+                  </h4>
+                  <p class="text-sm">Servers that run your workflows when they're triggered. GitHub provides Linux,
+                    Windows, and macOS runners, or you can host your own.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Workflow Architecture</h3>
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <div class="flex flex-col items-center">
+                  <div class="w-full max-w-3xl">
+                    <div class="border-2 border-blue-500 rounded-lg p-3 mb-4 bg-white dark:bg-gray-900">
+                      <div class="font-semibold text-blue-600 mb-1">Workflow</div>
+                      <div class="border-2 border-green-500 rounded-lg p-3 mb-3 bg-white dark:bg-gray-900">
+                        <div class="font-semibold text-green-600 mb-1">Event Trigger</div>
+                        <div class="text-sm">push, pull_request, schedule, etc.</div>
+                      </div>
+                      <div class="border-2 border-purple-500 rounded-lg p-3 mb-3 bg-white dark:bg-gray-900">
+                        <div class="font-semibold text-purple-600 mb-1">Job 1</div>
+                        <div class="border-2 border-orange-500 rounded-lg p-2 mb-2 bg-white dark:bg-gray-900">
+                          <div class="font-semibold text-orange-600 mb-1">Step 1</div>
+                          <div class="text-sm">checkout code</div>
+                        </div>
+                        <div class="border-2 border-orange-500 rounded-lg p-2 mb-2 bg-white dark:bg-gray-900">
+                          <div class="font-semibold text-orange-600 mb-1">Step 2</div>
+                          <div class="text-sm">setup environment</div>
+                        </div>
+                        <div class="border-2 border-orange-500 rounded-lg p-2 bg-white dark:bg-gray-900">
+                          <div class="font-semibold text-orange-600 mb-1">Step 3</div>
+                          <div class="text-sm">run tests</div>
+                        </div>
+                      </div>
+                      <div class="border-2 border-purple-500 rounded-lg p-3 bg-white dark:bg-gray-900">
+                        <div class="font-semibold text-purple-600 mb-1">Job 2</div>
+                        <div class="border-2 border-orange-500 rounded-lg p-2 mb-2 bg-white dark:bg-gray-900">
+                          <div class="font-semibold text-orange-600 mb-1">Step 1</div>
+                          <div class="text-sm">build application</div>
+                        </div>
+                        <div class="border-2 border-orange-500 rounded-lg p-2 bg-white dark:bg-gray-900">
+                          <div class="font-semibold text-orange-600 mb-1">Step 2</div>
+                          <div class="text-sm">deploy application</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Key Benefits of GitHub Actions</h3>
+              <ul class="list-disc pl-6 space-y-2">
+                <li><strong>Seamless Integration:</strong> Built directly into GitHub, eliminating the need for external
+                  services.</li>
+                <li><strong>Marketplace of Actions:</strong> Access to thousands of pre-built actions for common tasks.
+                </li>
+                <li><strong>Matrix Builds:</strong> Test across multiple operating systems and runtime versions easily.
+                </li>
+                <li><strong>Community-Powered:</strong> Benefit from a large community creating and sharing actions.
+                </li>
+                <li><strong>Free for Public Repositories:</strong> Generous free tier for open-source projects.</li>
+                <li><strong>Self-Hosted Runners:</strong> Option to use your own infrastructure for specific needs.</li>
+              </ul>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900 dark:bg-opacity-20 border-l-4 border-yellow-500 p-4 rounded">
+              <h4 class="font-semibold text-yellow-800 dark:text-yellow-300">Important Note</h4>
+              <p class="text-yellow-700 dark:text-yellow-200">
+                GitHub Actions follows specific conventions for workflow files. All workflow files must be stored in the
+                <code>.github/workflows</code> directory of your repository and must use YAML syntax with either a
+                <code>.yml</code> or <code>.yaml</code> file extension.
+              </p>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Common Use Cases for GitHub Actions</h3>
+            <div class="chart-container">
+              <canvas id="usageCasesChart"></canvas>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400 text-center mt-2">
+              GitHub Actions is commonly used for CI/CD, testing, deployment, and more
+            </p>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Exercise: Understanding GitHub Actions Components</h3>
+            <p class="mb-4">
+              Let's test your understanding of GitHub Actions components with a simple matching exercise:
+            </p>
+
+            <div class="space-y-4">
+              <div class="p-4 border rounded-lg">
+                <p class="font-semibold">Match the following components to their descriptions:</p>
+                <ol class="list-decimal pl-6 mt-2 space-y-2">
+                  <li>Workflow</li>
+                  <li>Event</li>
+                  <li>Job</li>
+                  <li>Step</li>
+                  <li>Action</li>
+                  <li>Runner</li>
+                </ol>
+
+                <div class="mt-4">
+                  <p class="font-semibold">Descriptions:</p>
+                  <ul class="list-disc pl-6 mt-2 space-y-2">
+                    <li>A. A server that executes workflow jobs</li>
+                    <li>B. A reusable unit of code that can perform a specific task</li>
+                    <li>C. An automated procedure defined in a YAML file</li>
+                    <li>D. A specific activity that triggers a workflow run</li>
+                    <li>E. A set of steps that execute on the same runner</li>
+                    <li>F. An individual task within a job</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="p-4 border border-dashed rounded-lg bg-gray-50 dark:bg-gray-800">
+                <p class="font-semibold">Answers:</p>
+                <p>1-C, 2-D, 3-E, 4-F, 5-B, 6-A</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chapter 2: Creating Your First Workflow -->
+        <section id="chapter2" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-file-code mr-2 text-blue-600"></i>
+              Chapter 2: Creating Your First Workflow
+            </h2>
+            <p class="mb-4">
+              In this chapter, we'll learn how to create and configure GitHub Actions workflows. We'll start with a
+              simple workflow and gradually build more complex ones.
+            </p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Workflow File Structure</h3>
+              <p class="mb-4">
+                GitHub Actions workflows are defined in YAML files located in the <code>.github/workflows</code>
+                directory of your repository. Each workflow file contains the following key elements:
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: My First Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test</code></pre>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-semibold text-blue-600">name</h4>
+                  <p class="text-sm">The name of your workflow that appears in the GitHub Actions tab. This is optional
+                    but recommended.</p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-600">on</h4>
+                  <p class="text-sm">Specifies the events that trigger the workflow. In the example above, the workflow
+                    runs when code is pushed to the main branch or when a pull request is created against the main
+                    branch.</p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-600">jobs</h4>
+                  <p class="text-sm">A workflow consists of one or more jobs. Jobs run in parallel by default unless you
+                    specify dependencies.</p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-600">runs-on</h4>
+                  <p class="text-sm">Specifies the type of runner to use for the job. GitHub provides runners for Ubuntu
+                    Linux, Windows, and macOS.</p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-600">steps</h4>
+                  <p class="text-sm">A job contains a sequence of steps. Steps can run commands, set up tasks, or run an
+                    action.</p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-600">uses</h4>
+                  <p class="text-sm">Specifies an action to run as part of a step. In the example, we're using the
+                    checkout action to fetch the repository code.</p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-600">with</h4>
+                  <p class="text-sm">Provides input parameters for an action.</p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-blue-600">run</h4>
+                  <p class="text-sm">Runs command-line programs using the operating system's shell.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Creating Your First Workflow</h3>
+              <p class="mb-4">
+                Let's create a simple workflow that runs tests for a Node.js application:
+              </p>
+
+              <ol class="list-decimal pl-6 space-y-4">
+                <li>
+                  <p class="font-semibold">Create the workflow directory</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                    <code>mkdir -p .github/workflows</code>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Create a workflow file</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                    <code>touch .github/workflows/node-tests.yml</code>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Add the following content to the file:</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>name: Node.js Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test</code></pre>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Commit and push the workflow file to your repository</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                    <code>git add .github/workflows/node-tests.yml</code><br />
+                    <code>git commit -m "Add Node.js test workflow"</code><br />
+                    <code>git push</code>
+                  </div>
+                </li>
+              </ol>
+
+              <p class="mt-4">
+                Once you push this file to your repository, GitHub Actions will automatically run the workflow whenever
+                code is pushed to the main branch or when a pull request is created against the main branch.
+              </p>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Understanding Workflow Events</h3>
+              <p class="mb-4">
+                Events are specific activities that trigger a workflow run. GitHub provides many event types, including:
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold">push</h4>
+                  <p class="text-sm">Triggered when code is pushed to the repository.</p>
+                  <div class="mt-2 text-xs">
+                    <pre><code>on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold">pull_request</h4>
+                  <p class="text-sm">Triggered when a pull request is opened, synchronized, or reopened.</p>
+                  <div class="mt-2 text-xs">
+                    <pre><code>on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [ main ]</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold">schedule</h4>
+                  <p class="text-sm">Triggered at scheduled times using cron syntax.</p>
+                  <div class="mt-2 text-xs">
+                    <pre><code>on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at midnight every day</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold">workflow_dispatch</h4>
+                  <p class="text-sm">Allows manual triggering of a workflow from the GitHub UI.</p>
+                  <div class="mt-2 text-xs">
+                    <pre><code>on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border-l-4 border-blue-500 p-4 rounded">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-300">Pro Tip</h4>
+              <p class="text-blue-700 dark:text-blue-200">
+                You can combine multiple events in a single workflow file. This is useful when you want the same
+                workflow to run for different events.
+              </p>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Exercise: Create a Multi-Job Workflow</h3>
+            <p class="mb-4">
+              Now let's create a more complex workflow with multiple jobs that depend on each other:
+            </p>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+              <button class="copy-button" onclick="copyCode(this)">Copy</button>
+              <pre><code>name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: build/
+  
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test
+  
+  deploy:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+          
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production..."
+          # Add your deployment commands here</code></pre>
+            </div>
+
+            <div class="mt-4">
+              <p class="font-semibold">Key points about this workflow:</p>
+              <ul class="list-disc pl-6 mt-2 space-y-2">
+                <li>It has three jobs: <code>build</code>, <code>test</code>, and <code>deploy</code>.</li>
+                <li>The <code>test</code> job depends on the <code>build</code> job (specified by
+                  <code>needs: build</code>).</li>
+                <li>The <code>deploy</code> job depends on both the <code>build</code> and <code>test</code> jobs.</li>
+                <li>We use the <code>actions/upload-artifact</code> and <code>actions/download-artifact</code> actions
+                  to share files between jobs.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chapter 3: Events, Jobs, and Runners -->
+        <section id="chapter3" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-code-branch mr-2 text-blue-600"></i>
+              Chapter 3: Events, Jobs, and Runners
+            </h2>
+            <p class="mb-4">
+              In this chapter, we'll dive deeper into the core components of GitHub Actions: events, jobs, and runners.
+              Understanding these components is essential for creating effective workflows.
+            </p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Events in Detail</h3>
+              <p class="mb-4">
+                Events are specific activities that trigger a workflow run. GitHub provides a wide range of events that
+                you can use to trigger your workflows.
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                <h4 class="font-semibold mb-2">Common Event Types</h4>
+                <ul class="list-disc pl-6 space-y-2">
+                  <li><strong>push:</strong> Triggered when commits are pushed to a repository branch.</li>
+                  <li><strong>pull_request:</strong> Triggered when a pull request is opened, updated, or closed.</li>
+                  <li><strong>schedule:</strong> Triggered at scheduled times using cron syntax.</li>
+                  <li><strong>workflow_dispatch:</strong> Allows manual triggering of a workflow from the GitHub UI.
+                  </li>
+                  <li><strong>repository_dispatch:</strong> Triggered by a custom webhook event.</li>
+                  <li><strong>release:</strong> Triggered when a release is created, edited, or deleted.</li>
+                  <li><strong>issues:</strong> Triggered when an issue is opened, edited, or closed.</li>
+                  <li><strong>issue_comment:</strong> Triggered when a comment on an issue or pull request is created,
+                    edited, or deleted.</li>
+                </ul>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <h4 class="font-semibold mb-2">Event Filtering</h4>
+                <pre><code>on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+    paths:
+      - '**.js'
+      - 'package.json'
+    tags:
+      - v1.*
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'</code></pre>
+              </div>
+
+              <p class="mb-4">
+                In the example above:
+              </p>
+              <ul class="list-disc pl-6 space-y-2">
+                <li>The workflow runs on pushes to the main branch, any branch in the releases directory, and any tag
+                  that matches the pattern v1.*.</li>
+                <li>It only runs when JavaScript files or package.json are modified.</li>
+                <li>For pull requests, it only runs when the target branch is main and the changes don't only affect
+                  documentation files.</li>
+              </ul>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Jobs in Detail</h3>
+              <p class="mb-4">
+                Jobs are sets of steps that execute on the same runner. A workflow can have multiple jobs that run in
+                parallel by default.
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <h4 class="font-semibold mb-2">Job Configuration</h4>
+                <pre><code>jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NODE_ENV: production
+    
+    steps:
+      # Job steps here
+  
+  test:
+    name: Run Tests
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    
+    steps:
+      # Job steps here</code></pre>
+              </div>
+
+              <p class="mb-4">
+                Key job configuration options:
+              </p>
+              <ul class="list-disc pl-6 space-y-2">
+                <li><strong>name:</strong> A display name for the job (optional).</li>
+                <li><strong>runs-on:</strong> The type of runner to use for the job.</li>
+                <li><strong>needs:</strong> Jobs that must complete successfully before this job will run.</li>
+                <li><strong>if:</strong> Conditions that must be met for the job to run.</li>
+                <li><strong>timeout-minutes:</strong> Maximum number of minutes to let a job run before GitHub
+                  automatically cancels it.</li>
+                <li><strong>env:</strong> Environment variables available to all steps in the job.</li>
+                <li><strong>strategy:</strong> Creates a build matrix for your jobs.</li>
+              </ul>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Runners in Detail</h3>
+              <p class="mb-4">
+                A runner is a server that runs your GitHub Actions workflows when they're triggered. GitHub provides
+                hosted runners for Linux, Windows, and macOS, or you can host your own runners.
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold mb-2">GitHub-Hosted Runners</h4>
+                  <ul class="list-disc pl-6 space-y-1">
+                    <li><code>ubuntu-latest</code>, <code>ubuntu-22.04</code>, <code>ubuntu-20.04</code></li>
+                    <li><code>windows-latest</code>, <code>windows-2022</code>, <code>windows-2019</code></li>
+                    <li><code>macos-latest</code>, <code>macos-12</code>, <code>macos-11</code></li>
+                  </ul>
+                  <p class="text-sm mt-2">
+                    GitHub-hosted runners come with a variety of pre-installed software and tools.
+                  </p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold mb-2">Self-Hosted Runners</h4>
+                  <p class="text-sm">
+                    You can set up your own runners to use with GitHub Actions. This is useful when you need specific
+                    hardware or software configurations.
+                  </p>
+                  <pre class="text-xs mt-2"><code>runs-on: self-hosted</code></pre>
+                  <p class="text-sm mt-2">
+                    You can also use labels to target specific self-hosted runners:
+                  </p>
+                  <pre class="text-xs mt-1"><code>runs-on: [self-hosted, linux, x64]</code></pre>
+                </div>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h4 class="font-semibold mb-2">Runner Specifications</h4>
+                <p class="mb-2">
+                  GitHub-hosted runners have the following specifications:
+                </p>
+                <ul class="list-disc pl-6 space-y-1">
+                  <li>2-core CPU (x86_64)</li>
+                  <li>7 GB of RAM</li>
+                  <li>14 GB of SSD disk space</li>
+                  <li>Ubuntu, Windows, or macOS operating system</li>
+                </ul>
+                <p class="text-sm mt-2">
+                  For more demanding workflows, you might need to use larger self-hosted runners or GitHub's larger
+                  runner options.
+                </p>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Steps in Detail</h3>
+              <p class="mb-4">
+                Steps are individual tasks that can run commands or actions within a job. Steps are executed in order
+                and are dependent on each other.
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <h4 class="font-semibold mb-2">Step Configuration</h4>
+                <pre><code>steps:
+  - name: Checkout code
+    uses: actions/checkout@v3
+  
+  - name: Set up Node.js
+    uses: actions/setup-node@v3
+    with:
+      node-version: '16'
+      cache: 'npm'
+  
+  - name: Install dependencies
+    run: npm ci
+    working-directory: ./app
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  
+  - name: Run tests
+    run: npm test
+    continue-on-error: true
+  
+  - name: Upload test results
+    if: always()
+    uses: actions/upload-artifact@v3
+    with:
+      name: test-results
+      path: test-results/</code></pre>
+              </div>
+
+              <p class="mb-4">
+                Key step configuration options:
+              </p>
+              <ul class="list-disc pl-6 space-y-2">
+                <li><strong>name:</strong> A display name for the step (optional).</li>
+                <li><strong>uses:</strong> Specifies an action to run as part of the step.</li>
+                <li><strong>run:</strong> Runs command-line programs using the operating system's shell.</li>
+                <li><strong>with:</strong> Provides input parameters for an action.</li>
+                <li><strong>env:</strong> Environment variables available to the step.</li>
+                <li><strong>working-directory:</strong> The working directory where the command is run.</li>
+                <li><strong>continue-on-error:</strong> Prevents a job from failing when a step fails.</li>
+                <li><strong>if:</strong> Conditions that must be met for the step to run.</li>
+              </ul>
+            </div>
+
+            <div class="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border-l-4 border-green-500 p-4 rounded">
+              <h4 class="font-semibold text-green-800 dark:text-green-300">Best Practice</h4>
+              <p class="text-green-700 dark:text-green-200">
+                Use descriptive names for your jobs and steps to make your workflow easier to understand. This helps
+                with troubleshooting and makes it clear what each part of your workflow is doing.
+              </p>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Exercise: Create a Workflow with Event Filtering</h3>
+            <p class="mb-4">
+              Create a workflow that runs only when specific conditions are met:
+            </p>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+              <button class="copy-button" onclick="copyCode(this)">Copy</button>
+              <pre><code>name: Conditional Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+    tags-ignore:
+      - 'v*-beta'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run linting
+        run: npm run lint
+  
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test</code></pre>
+            </div>
+
+            <div class="mt-4">
+              <p class="font-semibold">This workflow:</p>
+              <ul class="list-disc pl-6 mt-2 space-y-2">
+                <li>Runs on pushes to the main branch and any feature branch, but only when changes are made to source
+                  files or package files.</li>
+                <li>Ignores pushes with beta version tags.</li>
+                <li>Runs on pull requests to the main branch.</li>
+                <li>Has a lint job that always runs and a test job that only runs on pushes or pull requests from forks.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chapter 4: Working with Actions -->
+        <section id="chapter4" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-box mr-2 text-blue-600"></i>
+              Chapter 4: Working with Actions
+            </h2>
+            <p class="mb-4">
+              Actions are the reusable units of code in GitHub Actions. They can perform a variety of tasks, from
+              setting up environments to deploying applications. In this chapter, we'll explore how to use existing
+              actions and create your own.
+            </p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Types of Actions</h3>
+              <p class="mb-4">
+                There are three types of actions you can use in your workflows:
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-600">JavaScript Actions</h4>
+                  <p class="text-sm">
+                    Run directly on the runner and are written in JavaScript. They're fast and have access to the GitHub
+                    API.
+                  </p>
+                  <div class="mt-2 text-xs">
+                    <pre><code>- uses: actions/setup-node@v3
+  with:
+    node-version: '16'</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-600">Docker Container Actions</h4>
+                  <p class="text-sm">
+                    Run in a Docker container and are packaged with all the dependencies they need. They're more
+                    isolated and consistent.
+                  </p>
+                  <div class="mt-2 text-xs">
+                    <pre><code>- uses: docker://alpine:3.16
+  with:
+    args: 'echo hello world'</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-purple-600">Composite Actions</h4>
+                  <p class="text-sm">
+                    Combine multiple steps into a single action. They're useful for reusing common sequences of steps.
+                  </p>
+                  <div class="mt-2 text-xs">
+                    <pre><code>- uses: ./.github/actions/my-composite-action
+  with:
+    param1: 'value1'</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Using Actions from the Marketplace</h3>
+              <p class="mb-4">
+                The GitHub Marketplace contains thousands of actions created by the community. Here are some popular
+                actions and how to use them:
+              </p>
+
+              <div class="space-y-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <h4 class="font-semibold mb-2">Checkout Code</h4>
+                  <pre><code>- name: Checkout code
+  uses: actions/checkout@v3
+  with:
+    # Number of commits to fetch (0 fetches all history)
+    fetch-depth: 1
+    # Whether to download Git-LFS files
+    lfs: false
+    # Whether to checkout submodules
+    submodules: false</code></pre>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <h4 class="font-semibold mb-2">Setup Node.js</h4>
+                  <pre><code>- name: Set up Node.js
+  uses: actions/setup-node@v3
+  with:
+    node-version: '16'
+    # Whether to use the node version from .nvmrc file
+    node-version-file: '.nvmrc'
+    # Whether to cache dependencies
+    cache: 'npm'
+    # Registry URL for npm
+    registry-url: 'https://registry.npmjs.org'</code></pre>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <h4 class="font-semibold mb-2">Cache Dependencies</h4>
+                  <pre><code>- name: Cache dependencies
+  uses: actions/cache@v3
+  with:
+    # Files to cache
+    path: ~/.npm
+    # Cache key based on package-lock.json
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    # Fallback cache keys
+    restore-keys: |
+      ${{ runner.os }}-node-</code></pre>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <h4 class="font-semibold mb-2">Upload and Download Artifacts</h4>
+                  <pre><code>- name: Upload artifact
+  uses: actions/upload-artifact@v3
+  with:
+    name: my-artifact
+    path: dist/
+    # Whether to fail if no files are found
+    if-no-files-found: error
+    # Retention period in days
+    retention-days: 5
+
+- name: Download artifact
+  uses: actions/download-artifact@v3
+  with:
+    name: my-artifact
+    path: dist/</code></pre>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <h4 class="font-semibold mb-2">Create a Release</h4>
+                  <pre><code>- name: Create Release
+  id: create_release
+  uses: actions/create-release@v1
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  with:
+    tag_name: ${{ github.ref }}
+    release_name: Release ${{ github.ref }}
+    draft: false
+    prerelease: false</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Creating Your Own Actions</h3>
+              <p class="mb-4">
+                You can create your own actions to reuse common functionality across your workflows. Let's look at how
+                to create a simple JavaScript action:
+              </p>
+
+              <ol class="list-decimal pl-6 space-y-4">
+                <li>
+                  <p class="font-semibold">Create a new repository for your action or use a directory in your existing
+                    repository</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                    <code>mkdir -p .github/actions/hello-world</code>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Create an action.yml file to define your action</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>name: 'Hello World'
+description: 'Greet someone and record the time'
+inputs:
+  who-to-greet:
+    description: 'Who to greet'
+    required: true
+    default: 'World'
+outputs:
+  time:
+    description: 'The time we greeted you'
+runs:
+  using: 'node16'
+  main: 'index.js'</code></pre>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Create an index.js file with your action code</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>const core = require('@actions/core');
+const github = require('@actions/github');
+
+try {
+  // Get inputs defined in action.yml
+  const nameToGreet = core.getInput('who-to-greet');
+  console.log(`Hello ${nameToGreet}!`);
+  
+  // Get the current time
+  const time = new Date().toTimeString();
+  
+  // Set outputs for other steps to use
+  core.setOutput('time', time);
+  
+  // Get the JSON webhook payload for the event that triggered the workflow
+  const payload = JSON.stringify(github.context.payload, null, 2);
+  console.log(`The event payload: ${payload}`);
+} catch (error) {
+  core.setFailed(error.message);
+}</code></pre>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Create a package.json file</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>{
+  "name": "hello-world-action",
+  "version": "1.0.0",
+  "description": "A simple hello world action",
+  "main": "index.js",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1"
+  }
+}</code></pre>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Install dependencies</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                    <code>cd .github/actions/hello-world</code><br />
+                    <code>npm install</code>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Use your action in a workflow</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>name: Hello World Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Person to greet'
+        required: true
+        default: 'World'
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Hello World Action
+        uses: ./.github/actions/hello-world
+        id: hello
+        with:
+          who-to-greet: ${{ github.event.inputs.name }}
+      
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"</code></pre>
+                  </div>
+                </li>
+              </ol>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Creating a Composite Action</h3>
+              <p class="mb-4">
+                Composite actions allow you to combine multiple steps into a single reusable action. Here's how to
+                create one:
+              </p>
+
+              <ol class="list-decimal pl-6 space-y-4">
+                <li>
+                  <p class="font-semibold">Create a directory for your composite action</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-2 rounded">
+                    <code>mkdir -p .github/actions/setup-and-test</code>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Create an action.yml file</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>name: 'Setup and Test'
+description: 'Set up Node.js and run tests'
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: '16'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+      shell: bash
+    
+    - name: Run tests
+      run: npm test
+      shell: bash</code></pre>
+                  </div>
+                </li>
+
+                <li>
+                  <p class="font-semibold">Use your composite action in a workflow</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>name: Test Workflow
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup and run tests
+        uses: ./.github/actions/setup-and-test
+        with:
+          node-version: '18'</code></pre>
+                  </div>
+                </li>
+              </ol>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border-l-4 border-blue-500 p-4 rounded">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-300">Pro Tip</h4>
+              <p class="text-blue-700 dark:text-blue-200">
+                When creating actions, follow these best practices:
+              </p>
+              <ul class="list-disc pl-6 text-blue-700 dark:text-blue-200">
+                <li>Keep your actions focused on a single task.</li>
+                <li>Document your inputs, outputs, and usage examples.</li>
+                <li>Version your actions using tags or branches.</li>
+                <li>Write tests for your actions to ensure they work as expected.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Exercise: Use Multiple Actions in a Workflow</h3>
+            <p class="mb-4">
+              Create a workflow that uses multiple actions from the GitHub Marketplace:
+            </p>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+              <button class="copy-button" onclick="copyCode(this)">Copy</button>
+              <pre><code>name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linting
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint: true
+          prettier: true
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: dist/
+  
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run security scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      
+      - name: Run OWASP ZAP scan
+        uses: zaproxy/action-baseline@v0.7.0
+        with:
+          target: 'https://www.example.com/'</code></pre>
+            </div>
+
+            <div class="mt-4">
+              <p class="font-semibold">This workflow:</p>
+              <ul class="list-disc pl-6 mt-2 space-y-2">
+                <li>Checks out the code using <code>actions/checkout</code>.</li>
+                <li>Sets up Node.js using <code>actions/setup-node</code>.</li>
+                <li>Runs linting using <code>wearerequired/lint-action</code>.</li>
+                <li>Uploads test coverage to Codecov using <code>codecov/codecov-action</code>.</li>
+                <li>Uploads build artifacts using <code>actions/upload-artifact</code>.</li>
+                <li>Runs security scans using <code>snyk/actions/node</code> and <code>zaproxy/action-baseline</code>.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chapter 5: CI/CD Implementation -->
+        <section id="chapter5" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-bolt mr-2 text-blue-600"></i>
+              Chapter 5: CI/CD Implementation
+            </h2>
+            <p class="mb-4">
+              Continuous Integration and Continuous Deployment (CI/CD) is one of the most common use cases for GitHub
+              Actions. In this chapter, we'll explore how to implement CI/CD pipelines for different project types.
+            </p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">CI/CD Pipeline Overview</h3>
+              <p class="mb-4">
+                A typical CI/CD pipeline consists of the following stages:
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                  <div class="flex flex-col items-center mb-4 md:mb-0">
+                    <div
+                      class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl">
+                      <i class="fas fa-code"></i>
+                    </div>
+                    <p class="mt-2 font-semibold">Code</p>
+                  </div>
+                  <div class="hidden md:block text-gray-400">
+                    <i class="fas fa-arrow-right text-xl"></i>
+                  </div>
+                  <div class="flex flex-col items-center mb-4 md:mb-0">
+                    <div
+                      class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl">
+                      <i class="fas fa-vial"></i>
+                    </div>
+                    <p class="mt-2 font-semibold">Test</p>
+                  </div>
+                  <div class="hidden md:block text-gray-400">
+                    <i class="fas fa-arrow-right text-xl"></i>
+                  </div>
+                  <div class="flex flex-col items-center mb-4 md:mb-0">
+                    <div
+                      class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center text-white text-2xl">
+                      <i class="fas fa-hammer"></i>
+                    </div>
+                    <p class="mt-2 font-semibold">Build</p>
+                  </div>
+                  <div class="hidden md:block text-gray-400">
+                    <i class="fas fa-arrow-right text-xl"></i>
+                  </div>
+                  <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center text-white text-2xl">
+                      <i class="fas fa-rocket"></i>
+                    </div>
+                    <p class="mt-2 font-semibold">Deploy</p>
+                  </div>
+                </div>
+              </div>
+
+              <p class="mb-4">
+                Each stage serves a specific purpose:
+              </p>
+              <ul class="list-disc pl-6 space-y-2">
+                <li><strong>Code:</strong> Developers write and commit code to the repository.</li>
+                <li><strong>Test:</strong> The code is tested to ensure it meets quality standards and doesn't introduce
+                  regressions.</li>
+                <li><strong>Build:</strong> The code is compiled, bundled, or packaged for deployment.</li>
+                <li><strong>Deploy:</strong> The built artifacts are deployed to the target environment.</li>
+              </ul>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">CI/CD for a Node.js Application</h3>
+              <p class="mb-4">
+                Let's create a CI/CD pipeline for a Node.js application that deploys to Heroku:
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Node.js CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Lint
+        run: npm run lint
+      
+      - name: Test
+        run: npm test
+      
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+  
+  build:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/
+  
+  deploy:
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist/
+      
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.14
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          procfile: "web: npm start"</code></pre>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">CI/CD for a Python Application</h3>
+              <p class="mb-4">
+                Here's a CI/CD pipeline for a Python application that deploys to AWS Elastic Beanstalk:
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Python CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+      
+      - name: Test with pytest
+        run: |
+          pytest
+  
+  build:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Create deployment package
+        run: |
+          zip -r deploy.zip . -x "*.git*" -x "*.github*" -x "*.pytest_cache*"
+      
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v3
+        with:
+          name: deploy-package
+          path: deploy.zip
+  
+  deploy:
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download deployment package
+        uses: actions/download-artifact@v3
+        with:
+          name: deploy-package
+      
+      - name: Deploy to AWS Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.EB_APPLICATION_NAME }}
+          environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
+          version_label: ${{ github.sha }}
+          region: ${{ secrets.AWS_REGION }}
+          deployment_package: deploy.zip</code></pre>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">CI/CD for a Docker Application</h3>
+              <p class="mb-4">
+                Here's a CI/CD pipeline for a Docker application that builds and pushes a Docker image to Docker Hub:
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Docker CI/CD
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Run tests
+        run: |
+          docker build -t test-image -f Dockerfile.test .
+          docker run test-image
+  
+  build-and-push:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/my-app
+          tags: |
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=sha
+      
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+  
+  deploy:
+    needs: build-and-push
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy to production
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-app:${GITHUB_REF#refs/tags/}
+            docker stop my-app || true
+            docker rm my-app || true
+            docker run -d --name my-app -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/my-app:${GITHUB_REF#refs/tags/}</code></pre>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">CI/CD for a Static Website</h3>
+              <p class="mb-4">
+                Here's a CI/CD pipeline for a static website that deploys to GitHub Pages:
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Static Website CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages</code></pre>
+              </div>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900 dark:bg-opacity-20 border-l-4 border-yellow-500 p-4 rounded">
+              <h4 class="font-semibold text-yellow-800 dark:text-yellow-300">Important Note</h4>
+              <p class="text-yellow-700 dark:text-yellow-200">
+                When implementing CI/CD pipelines, make sure to store sensitive information like API keys, passwords,
+                and tokens as secrets in your GitHub repository. Never hardcode these values in your workflow files.
+              </p>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Environment-Specific Deployments</h3>
+            <p class="mb-4">
+              GitHub Actions supports environment-specific deployments with protection rules and secrets. Here's an
+              example of a workflow that deploys to different environments based on the branch:
+            </p>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+              <button class="copy-button" onclick="copyCode(this)">Copy</button>
+              <pre><code>name: Environment Deployments
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/
+  
+  deploy-dev:
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+      url: https://dev.example.com
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist/
+      
+      - name: Deploy to development
+        run: |
+          echo "Deploying to development environment"
+          # Add deployment commands here
+  
+  deploy-staging:
+    needs: build
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.example.com
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist/
+      
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging environment"
+          # Add deployment commands here
+  
+  deploy-production:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.example.com
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist/
+      
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment"
+          # Add deployment commands here</code></pre>
+            </div>
+
+            <div class="mt-4">
+              <p class="font-semibold">This workflow:</p>
+              <ul class="list-disc pl-6 mt-2 space-y-2">
+                <li>Builds the application once.</li>
+                <li>Deploys to different environments based on the branch that was pushed.</li>
+                <li>Uses GitHub Environments to manage environment-specific settings and protection rules.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chapter 6: Advanced Features -->
+        <section id="chapter6" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-cogs mr-2 text-blue-600"></i>
+              Chapter 6: Advanced Features
+            </h2>
+            <p class="mb-4">
+              In this chapter, we'll explore advanced GitHub Actions features that can help you build more powerful and
+              efficient workflows.
+            </p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Matrix Builds</h3>
+              <p class="mb-4">
+                Matrix builds allow you to test your code across multiple configurations, such as different operating
+                systems, Node.js versions, or browsers.
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Node.js Matrix Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [14.x, 16.x, 18.x]
+        exclude:
+          # Exclude Node 14 on macOS
+          - os: macos-latest
+            node-version: 14.x
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test</code></pre>
+              </div>
+
+              <p>
+                In this example, the workflow will run 8 jobs in parallel (3 operating systems × 3 Node.js versions - 1
+                excluded combination), testing your code across different environments.
+              </p>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Caching Dependencies</h3>
+              <p class="mb-4">
+                Caching dependencies can significantly speed up your workflows by reusing files from previous runs.
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Node.js with Caching
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test</code></pre>
+              </div>
+
+              <p>
+                The <code>actions/cache</code> action caches the npm dependencies based on the contents of the
+                package-lock.json file. If the file hasn't changed, the cached dependencies will be restored, saving
+                download time.
+              </p>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Environment Variables and Secrets</h3>
+              <p class="mb-4">
+                GitHub Actions allows you to use environment variables and secrets to store sensitive information.
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Deploy with Secrets
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    env:
+      NODE_ENV: production
+      APP_NAME: my-awesome-app
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to production
+        env:
+          DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+        run: |
+          echo "Deploying $APP_NAME to $DEPLOY_URL"
+          # Use API_TOKEN for authentication
+          # Actual deployment commands here</code></pre>
+              </div>
+
+              <p>
+                In this example:
+              </p>
+              <ul class="list-disc pl-6 space-y-2">
+                <li>We define workflow-level environment variables (<code>NODE_ENV</code> and <code>APP_NAME</code>).
+                </li>
+                <li>We use repository secrets (<code>DEPLOY_URL</code> and <code>API_TOKEN</code>) for sensitive
+                  information.</li>
+              </ul>
+
+              <p class="mt-2">
+                Secrets can be added in your repository settings under "Settings > Secrets and variables > Actions".
+              </p>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Artifacts and Workflow Outputs</h3>
+              <p class="mb-4">
+                Artifacts allow you to share files between jobs, while outputs enable you to share data.
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Build and Deploy with Outputs
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      build_id: ${{ steps.build_step.outputs.build_id }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build
+        id: build_step
+        run: |
+          echo "Building application..."
+          echo "build_id=$(date +%s)" >> $GITHUB_OUTPUT
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: build/
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+          
+      - name: Deploy with build ID
+        run: |
+          echo "Deploying build ${{ needs.build.outputs.build_id }}"</code></pre>
+              </div>
+
+              <p>
+                In this example:
+              </p>
+              <ul class="list-disc pl-6 space-y-2">
+                <li>The <code>build</code> job generates a build ID and sets it as an output.</li>
+                <li>The <code>deploy</code> job accesses this output using <code>needs.build.outputs.build_id</code>.
+                </li>
+                <li>We also use artifacts to share the build files between jobs.</li>
+              </ul>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Reusable Workflows</h3>
+              <p class="mb-4">
+                Reusable workflows allow you to create workflow templates that can be called from other workflows.
+              </p>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                <p class="font-semibold mb-2">Reusable workflow (.github/workflows/reusable-build.yml):</p>
+                <div class="code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <pre><code>name: Reusable Build Workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+    secrets:
+      npm-token:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          
+      - name: Install dependencies
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.npm-token }}" > .npmrc
+          npm ci
+          
+      - name: Build
+        run: npm run build</code></pre>
+                </div>
+
+                <p class="font-semibold mt-4 mb-2">Caller workflow (.github/workflows/main.yml):</p>
+                <div class="code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <pre><code>name: Main Workflow
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  call-build:
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      node-version: '16'
+    secrets:
+      npm-token: ${{ secrets.NPM_TOKEN }}
+      
+  deploy:
+    needs: call-build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy
+        run: echo "Deploying..."</code></pre>
+                </div>
+              </div>
+
+              <p>
+                Reusable workflows help you avoid duplicating code across multiple workflow files, making your workflows
+                more maintainable.
+              </p>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900 dark:bg-opacity-20 border-l-4 border-yellow-500 p-4 rounded">
+              <h4 class="font-semibold text-yellow-800 dark:text-yellow-300">Security Best Practice</h4>
+              <p class="text-yellow-700 dark:text-yellow-200">
+                Always use secrets for sensitive information like API tokens, passwords, and credentials. Never hardcode
+                these values in your workflow files, as they would be visible to anyone with access to your repository.
+              </p>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Self-Hosted Runners</h3>
+            <p class="mb-4">
+              While GitHub provides hosted runners, you can also set up your own self-hosted runners for specific needs:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 class="font-semibold mb-2">Benefits of Self-Hosted Runners</h4>
+                <ul class="list-disc pl-6 space-y-2">
+                  <li>Access to specific hardware configurations</li>
+                  <li>Larger storage and CPU capacity</li>
+                  <li>Control over the runner environment</li>
+                  <li>Access to internal network resources</li>
+                  <li>Custom software installations</li>
+                  <li>No usage limits or queue times</li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="font-semibold mb-2">Using Self-Hosted Runners</h4>
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <pre><code>name: Self-Hosted Runner Workflow
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build
+        run: |
+          echo "Building on self-hosted runner"
+          # Custom build commands here</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <h4 class="font-semibold mb-2">Setting Up a Self-Hosted Runner</h4>
+              <ol class="list-decimal pl-6 space-y-2">
+                <li>Go to your repository settings</li>
+                <li>Navigate to "Settings > Actions > Runners"</li>
+                <li>Click "New self-hosted runner"</li>
+                <li>Follow the instructions to download, configure, and start the runner</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Exercise: Create an Advanced Workflow</h3>
+            <p class="mb-4">
+              Let's create an advanced workflow that combines matrix builds, caching, and environment-specific
+              deployments:
+            </p>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+              <button class="copy-button" onclick="copyCode(this)">Copy</button>
+              <pre><code>name: Advanced CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [14.x, 16.x, 18.x]
+        exclude:
+          - os: windows-latest
+            node-version: 14.x
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run tests
+        run: npm test
+        
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.node-version }}
+          path: test-results/
+  
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: build/
+  
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+          
+      - name: Deploy to staging
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          echo "Deploying to staging environment..."
+          # Add staging deployment commands here
+  
+  deploy-production:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+          
+      - name: Deploy to production
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          echo "Deploying to production environment..."
+          # Add production deployment commands here</code></pre>
+            </div>
+
+            <div class="mt-4">
+              <p class="font-semibold">Key features of this workflow:</p>
+              <ul class="list-disc pl-6 mt-2 space-y-2">
+                <li>Matrix testing across multiple operating systems and Node.js versions</li>
+                <li>Dependency caching to speed up builds</li>
+                <li>Conditional job execution based on the branch (develop vs main)</li>
+                <li>Environment-specific deployments with different configurations</li>
+                <li>Artifact sharing between jobs</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chapter 7: Best Practices -->
+        <section id="chapter7" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-award mr-2 text-blue-600"></i>
+              Chapter 7: Best Practices and Optimization
+            </h2>
+            <p class="mb-4">
+              In this chapter, we'll explore best practices and optimization techniques for GitHub Actions workflows.
+            </p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Workflow Optimization</h3>
+              <p class="mb-4">
+                Optimizing your workflows can save time, reduce costs, and improve reliability. Here are some
+                optimization techniques:
+              </p>
+
+              <div class="space-y-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-600">Use Caching</h4>
+                  <p class="text-sm mb-2">
+                    Cache dependencies, build outputs, and other files to speed up your workflows.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>- name: Cache dependencies
+  uses: actions/cache@v3
+  with:
+    path: ~/.npm
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-node-</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-600">Optimize Checkout</h4>
+                  <p class="text-sm mb-2">
+                    Use the <code>fetch-depth</code> option to limit the number of commits to fetch.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>- name: Checkout code
+  uses: actions/checkout@v3
+  with:
+    fetch-depth: 1  # Only fetch the latest commit</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-600">Use Conditional Execution</h4>
+                  <p class="text-sm mb-2">
+                    Use the <code>if</code> condition to skip jobs or steps that aren't needed.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>- name: Run only on main branch
+  if: github.ref == 'refs/heads/main'
+  run: echo "This only runs on the main branch"</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-600">Optimize Matrix Builds</h4>
+                  <p class="text-sm mb-2">
+                    Use <code>exclude</code> and <code>include</code> to fine-tune your matrix builds.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>strategy:
+  matrix:
+    os: [ubuntu-latest, windows-latest, macos-latest]
+    node-version: [14.x, 16.x, 18.x]
+    exclude:
+      - os: macos-latest
+        node-version: 14.x
+    include:
+      - os: ubuntu-latest
+        node-version: 20.x
+        experimental: true</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-blue-600">Use Job Outputs</h4>
+                  <p class="text-sm mb-2">
+                    Share data between jobs using outputs instead of artifacts when possible.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>jobs:
+  job1:
+    outputs:
+      output1: ${{ steps.step1.outputs.test }}
+    steps:
+      - id: step1
+        run: echo "test=hello" >> $GITHUB_OUTPUT
+  
+  job2:
+    needs: job1
+    steps:
+      - run: echo ${{ needs.job1.outputs.output1 }}</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Security Best Practices</h3>
+              <p class="mb-4">
+                Security is crucial when setting up GitHub Actions workflows. Here are some best practices:
+              </p>
+
+              <div class="space-y-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-red-600">Use Secrets for Sensitive Data</h4>
+                  <p class="text-sm">
+                    Never hardcode sensitive information in your workflow files. Use GitHub Secrets instead.
+                  </p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-red-600">Pin Actions to a Specific Version</h4>
+                  <p class="text-sm mb-2">
+                    Always pin actions to a specific version (preferably a SHA) to prevent supply chain attacks.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Good: Pinned to a specific version
+- uses: actions/checkout@v3
+
+# Better: Pinned to a specific SHA
+- uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
+
+# Bad: Not pinned to a specific version
+- uses: actions/checkout@main</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-red-600">Limit Permissions</h4>
+                  <p class="text-sm mb-2">
+                    Limit the permissions granted to the GitHub token to only what's needed.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>permissions:
+  contents: read
+  issues: write
+  pull-requests: write</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-red-600">Use Environment Protection Rules</h4>
+                  <p class="text-sm">
+                    Set up environment protection rules for sensitive environments like production.
+                  </p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-red-600">Validate External Inputs</h4>
+                  <p class="text-sm">
+                    Always validate inputs from external sources to prevent injection attacks.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Workflow Organization</h3>
+              <p class="mb-4">
+                Organizing your workflows effectively can make them easier to maintain and understand:
+              </p>
+
+              <div class="space-y-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-600">Use Descriptive Names</h4>
+                  <p class="text-sm">
+                    Use descriptive names for your workflows, jobs, and steps to make them easier to understand.
+                  </p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-600">Split Complex Workflows</h4>
+                  <p class="text-sm">
+                    Split complex workflows into smaller, more focused ones. Use reusable workflows for common
+                    functionality.
+                  </p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-600">Use Comments</h4>
+                  <p class="text-sm mb-2">
+                    Add comments to your workflow files to explain complex or non-obvious parts.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code># This job runs only when a tag is pushed
+jobs:
+  deploy:
+    # Only run this job when a tag is pushed
+    if: startsWith(github.ref, 'refs/tags/')</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-green-600">Use Consistent Structure</h4>
+                  <p class="text-sm">
+                    Use a consistent structure across your workflow files to make them easier to understand and
+                    maintain.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">Monitoring and Debugging</h3>
+              <p class="mb-4">
+                Monitoring and debugging your workflows is essential for maintaining their reliability:
+              </p>
+
+              <div class="space-y-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-purple-600">Enable Debug Logging</h4>
+                  <p class="text-sm mb-2">
+                    Enable debug logging to get more detailed information about your workflow runs.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Set this secret in your repository
+# ACTIONS_RUNNER_DEBUG: true
+# ACTIONS_STEP_DEBUG: true</code></pre>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-purple-600">Use the GitHub CLI</h4>
+                  <p class="text-sm">
+                    Use the GitHub CLI to view and debug workflow runs from the command line.
+                  </p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h4 class="font-semibold text-purple-600">Set Up Notifications</h4>
+                  <p class="text-sm mb-2">
+                    Set up notifications for workflow failures to be alerted when something goes wrong.
+                  </p>
+                  <div class="code-block">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code>- name: Send notification on failure
+  if: failure()
+  uses: rtCamp/action-slack-notify@v2
+  env:
+    SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    SLACK_TITLE: "Workflow Failed"
+    SLACK_MESSAGE: "The workflow has failed"
+    SLACK_COLOR: "#FF0000"</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border-l-4 border-green-500 p-4 rounded">
+              <h4 class="font-semibold text-green-800 dark:text-green-300">Best Practice</h4>
+              <p class="text-green-700 dark:text-green-200">
+                Regularly review and update your workflows to ensure they're using the latest best practices and
+                security measures. GitHub Actions is constantly evolving, and new features and improvements are
+                regularly added.
+              </p>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Common Pitfalls and How to Avoid Them</h3>
+            <p class="mb-4">
+              Here are some common pitfalls when using GitHub Actions and how to avoid them:
+            </p>
+
+            <div class="space-y-4">
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h4 class="font-semibold text-red-600">Not Pinning Action Versions</h4>
+                <p class="text-sm">
+                  <strong>Problem:</strong> Using <code>@main</code> or <code>@master</code> for actions can lead to
+                  unexpected behavior if the action is updated.
+                </p>
+                <p class="text-sm">
+                  <strong>Solution:</strong> Always pin actions to a specific version or SHA.
+                </p>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h4 class="font-semibold text-red-600">Hardcoding Secrets</h4>
+                <p class="text-sm">
+                  <strong>Problem:</strong> Hardcoding secrets in workflow files exposes sensitive information.
+                </p>
+                <p class="text-sm">
+                  <strong>Solution:</strong> Use GitHub Secrets to store sensitive information.
+                </p>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h4 class="font-semibold text-red-600">Not Using Caching</h4>
+                <p class="text-sm">
+                  <strong>Problem:</strong> Not using caching can lead to slow workflow runs.
+                </p>
+                <p class="text-sm">
+                  <strong>Solution:</strong> Use the <code>actions/cache</code> action to cache dependencies and build
+                  outputs.
+                </p>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h4 class="font-semibold text-red-600">Overusing Matrix Builds</h4>
+                <p class="text-sm">
+                  <strong>Problem:</strong> Using too many matrix combinations can lead to excessive workflow runs and
+                  costs.
+                </p>
+                <p class="text-sm">
+                  <strong>Solution:</strong> Use <code>exclude</code> and <code>include</code> to limit matrix
+                  combinations to only what's needed.
+                </p>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h4 class="font-semibold text-red-600">Not Handling Failures</h4>
+                <p class="text-sm">
+                  <strong>Problem:</strong> Not handling failures can lead to incomplete workflow runs.
+                </p>
+                <p class="text-sm">
+                  <strong>Solution:</strong> Use <code>if: failure()</code> or <code>continue-on-error: true</code> to
+                  handle failures gracefully.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Real-World Examples Section -->
+        <section id="examples" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-code mr-2 text-blue-600"></i>
+              Real-World Examples
+            </h2>
+            <p class="mb-4">
+              In this section, we'll explore real-world examples of GitHub Actions workflows for different project types
+              and scenarios. These examples demonstrate how to implement CI/CD pipelines for various technologies and
+              deployment targets.
+            </p>
+
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">Example 1: Node.js Application with Testing and Deployment</h3>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Node.js CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Lint
+        run: npm run lint
+        
+      - name: Test
+        run: npm test
+        
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+  
+  build-and-deploy:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.14
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}</code></pre>
+              </div>
+
+              <p>
+                This workflow:
+              </p>
+              <ul class="list-disc pl-6 space-y-1">
+                <li>Runs tests on pull requests and pushes to the main branch</li>
+                <li>Uploads test coverage reports to Codecov</li>
+                <li>Builds and deploys the application to Heroku when code is pushed to the main branch</li>
+              </ul>
+            </div>
+
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">Example 2: Python Package with Multiple Python Versions</h3>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Python Package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8', '3.9', '3.10']
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install -e .
+          
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          
+      - name: Test with pytest
+        run: |
+          pytest
+  
+  publish:
+    needs: test
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+          
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          python -m build
+          twine upload dist/*</code></pre>
+              </div>
+
+              <p>
+                This workflow:
+              </p>
+              <ul class="list-disc pl-6 space-y-1">
+                <li>Tests the package across multiple Python versions</li>
+                <li>Runs linting checks with flake8</li>
+                <li>Publishes the package to PyPI when a new tag is pushed</li>
+              </ul>
+            </div>
+
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">Example 3: Documentation Generation and Publishing</h3>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - '**.md'
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-material
+          
+      - name: Build documentation
+        run: mkdocs build
+        
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site</code></pre>
+              </div>
+
+              <p>
+                This workflow:
+              </p>
+              <ul class="list-disc pl-6 space-y-1">
+                <li>Triggers when documentation files are changed</li>
+                <li>Builds documentation using MkDocs</li>
+                <li>Publishes the documentation to GitHub Pages</li>
+              </ul>
+            </div>
+
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">Example 4: Docker Image Build and Push</h3>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Docker Build and Push
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: username/app-name
+          tags: |
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+      
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}</code></pre>
+              </div>
+
+              <p>
+                This workflow:
+              </p>
+              <ul class="list-disc pl-6 space-y-1">
+                <li>Builds a Docker image when code is pushed to the main branch or when a tag is pushed</li>
+                <li>Supports multiple platforms (amd64 and arm64)</li>
+                <li>Pushes the image to Docker Hub with appropriate tags</li>
+              </ul>
+            </div>
+
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">Example 5: Terraform Infrastructure Deployment</h3>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Terraform
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'terraform/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'terraform/**'
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.0
+      
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+        working-directory: ./terraform
+      
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./terraform
+      
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        working-directory: ./terraform
+      
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color
+        working-directory: ./terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+      - name: Update Pull Request
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome == 'success' && '✅' || '❌' }}
+            \`\`\`${{ steps.plan.outputs.stdout }}\`\`\`
+            
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+      
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}</code></pre>
+              </div>
+
+              <p>
+                This workflow:
+              </p>
+              <ul class="list-disc pl-6 space-y-1">
+                <li>Validates Terraform configurations on pull requests</li>
+                <li>Posts the plan output as a comment on the pull request</li>
+                <li>Applies the Terraform changes when code is pushed to the main branch</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-semibold mb-4">Example 6: Read the Docs Documentation Integration</h3>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                <pre><code>name: Read the Docs Preview
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Add Read the Docs preview
+        uses: readthedocs/actions/preview@v1
+        with:
+          project-slug: "your-project-slug"</code></pre>
+              </div>
+
+              <p>
+                This workflow uses the Read the Docs GitHub Action to add a preview link to pull requests, allowing
+                reviewers to see the documentation changes before merging.
+              </p>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border-l-4 border-blue-500 p-4 rounded mt-6">
+              <h4 class="font-semibold text-blue-800 dark:text-blue-300">Pro Tip</h4>
+              <p class="text-blue-700 dark:text-blue-200">
+                These examples are starting points that you can customize for your specific needs. Always review and
+                test your workflows thoroughly before deploying them to production environments.
+              </p>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Terraform Documentation Generation Example</h3>
+            <p class="mb-4">
+              Here's a real-world example of using GitHub Actions to automatically generate documentation for Terraform
+              modules:
+            </p>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+              <button class="copy-button" onclick="copyCode(this)">Copy</button>
+              <pre><code>name: Generate Terraform Docs
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: Render terraform docs inside the README.md and push changes back to PR branch
+      uses: terraform-docs/gh-actions@v1.4.1
+      with:
+        working-dir: .
+        output-file: README.md
+        output-method: inject
+        git-push: "true"</code></pre>
+            </div>
+
+            <p class="mt-4">
+              This workflow uses the terraform-docs GitHub Action to automatically generate documentation for Terraform
+              modules and update the README.md file. When a pull request is created or updated, the action will generate
+              the documentation and push the changes back to the PR branch.
+            </p>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="text-xl font-semibold mb-4">Exercise: Customize a Workflow for Your Project</h3>
+            <p class="mb-4">
+              Now it's your turn to create a workflow for your specific project type. Choose one of the following
+              project types and customize the workflow template:
+            </p>
+
+            <div class="space-y-4">
+              <div class="p-4 border rounded-lg">
+                <h4 class="font-semibold mb-2">Project Types:</h4>
+                <ul class="list-disc pl-6 space-y-1">
+                  <li>Frontend web application (React, Vue, Angular)</li>
+                  <li>Backend API (Node.js, Python, Ruby)</li>
+                  <li>Mobile application (React Native, Flutter)</li>
+                  <li>Desktop application (Electron)</li>
+                  <li>Library or package</li>
+                </ul>
+              </div>
+
+              <div class="p-4 border rounded-lg">
+                <h4 class="font-semibold mb-2">Workflow Template:</h4>
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg code-block">
+                  <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                  <pre><code>name: [Your Project Name] CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Add your jobs here
+  # Examples:
+  # - lint
+  # - test
+  # - build
+  # - deploy
+  
+  # Remember to consider:
+  # - Dependencies and caching
+  # - Testing across different environments
+  # - Security scanning
+  # - Deployment to your target environment</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Practical Exercises Section -->
+        <section id="exercises" class="mb-12">
+          <div class="card">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+              <i class="fas fa-dumbbell mr-2 text-blue-600"></i>
+              Practical Exercises
+            </h2>
+            <p class="mb-4">
+              The best way to learn GitHub Actions is by doing. Here are some practical exercises to help you apply what
+              you've learned:
+            </p>
+
+            <div class="space-y-6">
+              <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-xl font-semibold mb-2">Exercise 1: Create a Basic CI Workflow</h3>
+                <p class="mb-4">
+                  Create a basic CI workflow for a simple application that:
+                </p>
+                <ul class="list-disc pl-6 mb-4 space-y-1">
+                  <li>Runs on pushes to the main branch and pull requests</li>
+                  <li>Sets up the appropriate runtime environment</li>
+                  <li>Installs dependencies</li>
+                  <li>Runs linting checks</li>
+                  <li>Runs tests</li>
+                </ul>
+                <div class="flex justify-end">
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                    onclick="toggleSolution('solution1')">Show Solution</button>
+                </div>
+                <div id="solution1" class="hidden mt-4">
+                  <div class="border-t pt-4">
+                    <h4 class="font-semibold mb-2">Solution:</h4>
+                    <div class="code-block">
+                      <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                      <pre><code>name: Basic CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm install
+      - name: Run linting
+        run: npm run lint
+      - name: Run tests
+        run: npm test
+        env:
+          CI: true</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-xl font-semibold mb-2">Exercise 2: Create a Deployment Workflow</h3>
+                <p class="mb-4">
+                  Create a deployment workflow that:
+                </p>
+                <ul class="list-disc pl-6 mb-4 space-y-1">
+                  <li>Triggers on pushes to the main branch</li>
+                  <li>Builds the application</li>
+                  <li>Deploys the application to a cloud provider (e.g., AWS, Azure, GCP)</li>
+                </ul>
+                <div class="flex justify-end">
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                    onclick="toggleSolution('solution2')">Show Solution</button>
+                </div>
+                <div id="solution2" class="hidden mt-4">
+                  <div class="border-t pt-4">
+                    <h4 class="font-semibold mb-2">Solution:</h4>
+                    <div class="code-block">
+                      <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                      <pre><code>name: Deployment
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'dist/**'
+      - 'build/**'
+      - 'src/**'
+      - '.env'
+      - 'docker-compose.yml'
+      - 'README.md'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm install
+      - name: Run build
+        run: npm run build
+        env:
+          CI: true
+          NODE_ENV: production
+      - name: Deploy to AWS
+        uses: aws-actions/ecs-deploy-task-definition@v1
+        with:
+          task-definition: my-task
+          service: my-service
+          cluster: my-cluster
+          region: us-west-2
+          credentials: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          image: my-image
+          port: 80
+          task-role-arn: ${{ secrets.AWS_TASK_ROLE_ARN }}
+          container-name: my-container
+          desired-count: 1
+          force-new-deployment: true
+          wait-for-service-stability: true</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                <h3 class="text-xl font-semibold mb-2">Exercise 3: Create a Documentation Generation Workflow</h3>
+                <p class="mb-4">
+                  Create a workflow that:
+                </p>
+                <ul class="list-disc pl-6 mb-4 space-y-1">
+                  <li>Triggers on pushes to the main branch</li>
+                  <li>Generates documentation using a documentation generator (e.g., MkDocs, Sphinx)</li>
+                  <li>Deploys the documentation to GitHub Pages or another hosting service</li>
+                </ul>
+                <div class="flex justify-end">
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                    onclick="toggleSolution('solution3')">Show Solution</button>
+                </div>
+                <div id="solution3" class="hidden mt-4">
+                  <div class="border-t pt-4">
+                    <h4 class="font-semibold mb-2">Solution:</h4>
+                    <div class="code-block">
+                      <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                      <pre><code>name: Documentation Generation
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - '**.md'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run documentation generator
+        run: mkdocs build
+        env:
+          MKDOCS_ENV: production
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          S3_KEY: ${{ secrets.S3_KEY }}
+          CI: true
+          NODE_ENV: production
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
+          publish_dir: ./docs</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+         <section id="resources"  class="mb-12">
+        <div className="space-y-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl flex items-center">
+                <BookOpen className="mr-2 h-6 w-6 text-blue-600" />
+                Additional Resources
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-6">
+                To continue your GitHub Actions learning journey, here are some valuable resources:
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <FileText className="mr-2 h-5 w-5 text-blue-600" />
+                    Official Documentation
+                  </h3>
+                  <ul className="space-y-3">
+                    <li>
+                      <a href="https://docs.github.com/en/actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        GitHub Actions Documentation
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://docs.github.com/en/actions/learn-github-actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        Learn GitHub Actions
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://docs.github.com/en/actions/examples" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        GitHub Actions Examples
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://docs.github.com/en/actions/reference" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        GitHub Actions Reference
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <Package className="mr-2 h-5 w-5 text-green-600" />
+                    Marketplace & Actions
+                  </h3>
+                  <ul className="space-y-3">
+                    <li>
+                      <a href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        GitHub Actions Marketplace
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        Official GitHub Actions
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/sdras/awesome-actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        Awesome Actions (Community List)
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <BookOpen className="mr-2 h-5 w-5 text-purple-600" />
+                    Tutorials & Guides
+                  </h3>
+                  <ul className="space-y-3">
+                    <li>
+                      <a href="https://lab.github.com/githubtraining/github-actions:-hello-world" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        GitHub Learning Lab: GitHub Actions
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://docs.github.com/en/actions/guides" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        GitHub Actions Guides
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://docs.github.com/en/actions/deployment" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        Deployment Guides
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <Users className="mr-2 h-5 w-5 text-orange-600" />
+                    Community & Support
+                  </h3>
+                  <ul className="space-y-3">
+                    <li>
+                      <a href="https://github.community/c/code-to-cloud/github-actions/41" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        GitHub Community Forum
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://stackoverflow.com/questions/tagged/github-actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        Stack Overflow: GitHub Actions
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/orgs/community/discussions/categories/actions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center">
+                        <span className="mr-2">•</span>
+                        GitHub Discussions: Actions
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold mb-4">Recommended Books</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                    <h4 className="font-semibold">GitHub Actions in Action</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                      A comprehensive guide to automating your workflow with GitHub Actions, covering everything from basic concepts to advanced techniques.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                    <h4 className="font-semibold">Continuous Delivery with GitHub Actions</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                      Learn how to implement continuous delivery pipelines using GitHub Actions, with practical examples for various project types.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                    <h4 className="font-semibold">Building Custom GitHub Actions</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                      A deep dive into creating custom actions for GitHub Actions, including JavaScript actions, Docker container actions, and composite actions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold mb-4">Video Tutorials</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                    <h4 className="font-semibold">GitHub Actions Crash Course</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                      A beginner-friendly introduction to GitHub Actions, covering the basics of workflow creation and automation.
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">Duration: 1 hour</p>
+                  </div>
+                  
+                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                    <h4 className="font-semibold">Advanced GitHub Actions Techniques</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                      Learn advanced techniques for optimizing your GitHub Actions workflows, including caching, matrix builds, and reusable workflows.
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">Duration: 1.5 hours</p>
+                  </div>
+                </div>
+              </div>
+
+              <Alert className="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border-green-200 dark:border-green-800 mt-8">
+                <AlertTitle className="text-green-800 dark:text-green-300">Practice Makes Perfect</AlertTitle>
+                <AlertDescription>
+                  The best way to learn GitHub Actions is by doing. Start with simple workflows and gradually add more complexity as you become more comfortable. Don't be afraid to experiment and learn from your mistakes.
+                </AlertDescription>
+              </Alert>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Glossary of Terms</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Workflow</h3>
+                  <p className="text-sm">An automated procedure that you add to your repository, defined in a YAML file in the .github/workflows directory.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Event</h3>
+                  <p className="text-sm">A specific activity that triggers a workflow run, such as a push, pull request, or scheduled time.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Job</h3>
+                  <p className="text-sm">A set of steps that execute on the same runner. Jobs can run in parallel or sequentially depending on configuration.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Step</h3>
+                  <p className="text-sm">An individual task within a job that can run commands, setup tasks, or run an action.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Action</h3>
+                  <p className="text-sm">A reusable unit of code that can perform a specific task, such as checking out code or setting up a runtime environment.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Runner</h3>
+                  <p className="text-sm">A server that runs your workflows when they're triggered. GitHub provides Linux, Windows, and macOS runners, or you can host your own.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Artifact</h3>
+                  <p className="text-sm">Files produced during a workflow run that can be saved and shared between jobs or downloaded after the workflow completes.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Secret</h3>
+                  <p className="text-sm">Encrypted environment variables that you create in a repository or organization for use in GitHub Actions workflows.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Environment</h3>
+                  <p className="text-sm">A named deployment target with protection rules and secrets that can be referenced in workflow jobs.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Matrix</h3>
+                  <p className="text-sm">A set of different configurations for a job, allowing you to test across multiple operating systems, versions, or other variables.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Context</h3>
+                  <p className="text-sm">A way to access information about workflow runs, runner environments, jobs, and steps. Each context is an object that contains properties.</p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <h3 className="font-semibold">Expression</h3>
+                  <p className="text-sm">A syntax used in workflows to evaluate variables, contexts, and functions. Expressions are denoted with ${{ expression }}.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Course Completion</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center p-6 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 rounded-lg">
+                <h3 className="text-2xl font-bold mb-4">Congratulations!</h3>
+                <p className="mb-4">
+                  You've completed the GitHub Actions Learning Guide. You now have the knowledge and skills to implement efficient CI/CD workflows using GitHub Actions.
+                </p>
+                <p>
+                  Remember to keep practicing and exploring new features as GitHub Actions continues to evolve.
+                </p>
+                <div className="mt-6">
+                  <Award className="h-16 w-16 text-blue-600 mx-auto" />
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <h3 className="font-semibold mb-2">Next Steps:</h3>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>Implement GitHub Actions in your own projects</li>
+                  <li>Create custom actions for your specific needs</li>
+                  <li>Contribute to open-source actions in the GitHub Marketplace</li>
+                  <li>Join the GitHub Actions community to share your knowledge and learn from others</li>
+                  <li>Stay updated with new GitHub Actions features and best practices</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+        </main>
+      </div>
+     
+      <!-- <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto text-center">
+          <p>&copy; 2023 GitHub Actions Workshop. All rights reserved.</p>
+        </div>
+      </footer>
+      <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+      <script>
+        function copyCode(button) {
+          const codeBlock = button.nextElementSibling.querySelector('code');
+          const code = codeBlock.textContent;
+          navigator.clipboard.writeText(code).then(() => {
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+              button.textContent = 'Copy';
+            }, 2000);
+          });
+        }
+
+        function toggleSolution(solutionId) {
+          const solution = document.getElementById(solutionId);
+          solution.classList.toggle('hidden');
+        }
+      </script> -->
+</body>
+
+</html>
+<!DOCTYPE html>
