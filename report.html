@@ -317,10 +317,10 @@
 </head>
 
 <body class="min-h-screen">
-  <button id="theme-toggle" class="fixed top-4 right-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-full">
+  <!-- <button id="theme-toggle" class="fixed top-4 right-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-full">
     <i class="fas fa-moon dark:hidden"></i>
     <i class="fas fa-sun hidden dark:block"></i>
-  </button>
+  </button> -->
 
   <button id="mobile-menu-button"
     class="fixed top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-full mobile-menu-button">
@@ -690,7 +690,7 @@
           <div class="card mt-6">
             <h3 class="text-xl font-semibold mb-4">Common Use Cases for GitHub Actions</h3>
             <div class="chart-container">
-              <canvas id="usageCasesChart"></canvas>
+              <canvas id="useCasesChart"></canvas>
             </div>
             <p class="text-sm text-gray-600 dark:text-gray-400 text-center mt-2">
               GitHub Actions is commonly used for CI/CD, testing, deployment, and more
@@ -4098,6 +4098,124 @@ jobs:
           solution.classList.toggle('hidden');
         }
       </script> -->
+
+      <script>
+    // GitHub Actions Adoption Chart
+    const adoptionCtx = document.getElementById('adoptionChart').getContext('2d');
+    new Chart(adoptionCtx, {
+      type: 'line',
+      data: {
+        labels: ['2019', '2020', '2021', '2022', '2023', '2024', '2025'],
+        datasets: [{
+          label: 'Repositories Using GitHub Actions (Millions)',
+          data: [0.1, 0.5, 1.2, 2.5, 4.0, 6.0, 8.5],
+          borderColor: '#36A2EB',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { color: '#333333' }
+          },
+          title: {
+            display: true,
+            text: 'GitHub Actions Adoption (2019–2025)',
+            color: '#333333'
+          }
+        },
+        scales: {
+          x: {
+            title: { display: true, text: 'Year', color: '#333333' },
+            ticks: { color: '#333333' }
+          },
+          y: {
+            title: { display: true, text: 'Repositories (Millions)', color: '#333333' },
+            ticks: { color: '#333333' },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // CI/CD Market Share Chart
+    const marketShareCtx = document.getElementById('marketShareChart').getContext('2d');
+    new Chart(marketShareCtx, {
+      type: 'pie',
+      data: {
+        labels: ['GitHub Actions', 'Jenkins', 'CircleCI', 'GitLab CI', 'Others'],
+        datasets: [{
+          label: 'CI/CD Market Share',
+          data: [35, 25, 15, 10, 15],
+          backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'],
+          borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { color: '#333333' }
+          },
+          title: {
+            display: true,
+            text: 'CI/CD Market Share (2025)',
+            color: '#333333'
+          }
+        }
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('useCasesChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['CI/CD', 'Testing', 'Deployment', 'Automation', 'Documentation'],
+      datasets: [{
+        label: 'Common Use Cases for GitHub Actions',
+        data: [40, 30, 20, 15, 10],
+        backgroundColor: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'],
+        borderColor: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          beginAtZero: true,
+          title: { display: true, text: 'Frequency of Use (%)', color: '#333' },
+          ticks: { color: '#333' },
+          grid: { color: '#ccc' }
+        },
+        y: {
+          title: { display: true, text: 'Use Case', color: '#333' },
+          ticks: { color: '#333' },
+          grid: { color: '#ccc' }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: 'Common Use Cases for GitHub Actions (2025)',
+          color: '#333',
+          font: { size: 16 }
+        }
+      }
+    }
+  });
+</script>
 </body>
 
 </html>
